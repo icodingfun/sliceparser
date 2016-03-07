@@ -1,0 +1,21 @@
+F:/workspace/sliceparser/test.ice
+{
+  Test:{
+    type:struct
+    name:Test
+    fields:{
+      1:{
+        name:id
+        type:int
+      }
+      2:{
+        name:name
+        type:string
+      }
+      3:{
+        name:age
+        type:int
+      }
+    }
+  }
+}
