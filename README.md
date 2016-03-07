@@ -1,6 +1,6 @@
 # sliceparser
 解析ICE的协议文件,依赖lpeg和lfs模块,推荐使用[LuaRocks](https://luarocks.org/)安装这两个模块。
-例如
+具体用法可以参考[demo.lua](https://github.com/icodingfun/sliceparser/blob/master/demo.lua), 例如:
 ```
 #ifndef  _TEST_ICE_
 #define  _TEST_ICE_
