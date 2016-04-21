@@ -60,8 +60,12 @@ local interfaceTemplate = [[
 package $package;
 
 import com.XSanGoG.eci.Protocol.XsgInterface;
+import com.morefun.XSanGoG.gate.common.Async;
+import com.morefun.XSanGoG.gate.common.NoSession;
+import com.morefun.XSanGoG.gate.common.Xsg;
 $import
 
+@Xsg
 public interface $classname extends $extends {
     $methods
 }
@@ -72,15 +76,15 @@ $rtn $methodName (String sessionId, $args)$exceptions;
 ]]
 
 local asnycSessionMethodTemplate = [[
-void $methodName (String sessionId, $args, ResponseDispatch response)$exceptions;
+@Async void $methodName (String sessionId, $args, ResponseDispatch response)$exceptions;
 ]]
 
 local syncNoSessionMethodTemplate = [[
-$rtn $methodName ($args)$exceptions;
+@NoSession $rtn $methodName ($args)$exceptions;
 ]]
 
 local asnycNoSessionMethodTemplate = [[
-void $methodName ($args, ResponseDispatch response)$exceptions;
+@NoSession @Async void $methodName ($args, ResponseDispatch response)$exceptions;
 ]]
 
 
