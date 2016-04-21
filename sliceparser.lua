@@ -47,7 +47,8 @@ local struct_field = name * blanks * name * blank0 * semicolon * blank0
 local enum_field = Ct(name * blank0 * (S"=" * blank0 * C(number^1))^0) * blank0 * P","^0 * blank0
 local ami = blank0 * P"ami" * blank0
 local amd = blank0 * P"amd" * blank0
-local ami_amd = S"[" * blank0 * (S"\"" * C(ami^0 * amd^0) * S"\"")^0 * blank0 * S","^0 * (blank0 * S"\"" * C(amd^0 * ami^0) * S"\"")^0 * blank0 * S"]"
+local nosession = blank0 * P"nosession" * blank0
+local ami_amd = S"[" * blank0 * (S"\"" * C(ami^0 * amd^0 * nosession^0) * S"\"")^0 * blank0 * S","^0 * (blank0 * S"\"" * C(amd^0 * ami^0 * nosession^0) * S"\"")^0 * blank0 * S","^0 * (blank0 * S"\"" * C(amd^0 * ami^0 * nosession^0) * S"\"")^0 * blank0 * S"]"
 local param = name * blank0 * name * blank0 * S","^0 * blank0
 local throws_exception = name * blank0 * S","^0
 local end_tag = P"}" * blank0 * semicolon * blank0
@@ -157,19 +158,33 @@ function item.interface(sitem)
     for _, method in ipairs(methods) do
         local mtd = {}
         local index = 1
-        if method[index] == "ami" or method[index] == "amd" then
+        if method[index] == "ami" or method[index] == "amd" or method[index] == "nosession" then
             if method[index] == "ami" then
                 mtd.ami = true
             elseif method[index] == "amd" then
                 mtd.amd = true
+            elseif method[index] == "nosession" then
+                mtd.nosession = true
             end
             index = index + 1
         end
-        if method[index] == "ami" or method[index] == "amd" then
+        if method[index] == "ami" or method[index] == "amd" or method[index] == "nosession" then
             if method[index] == "ami" then
                 mtd.ami = true
             elseif method[index] == "amd" then
                 mtd.amd = true
+            elseif method[index] == "nosession" then
+                mtd.nosession = true
+            end
+            index = index + 1
+        end
+        if method[index] == "ami" or method[index] == "amd" or method[index] == "nosession" then
+            if method[index] == "ami" then
+                mtd.ami = true
+            elseif method[index] == "amd" then
+                mtd.amd = true
+            elseif method[index] == "nosession" then
+                mtd.nosession = true
             end
             index = index + 1
         end
@@ -204,6 +219,7 @@ local function wrap(r)
     for i = 2, #r, 1 do
         local entry = item[r[i].type](r[i])
         if entry then
+            entry.namespace = namespace
             result[entry.name] = entry
         end
     end
