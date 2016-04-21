@@ -1,7 +1,7 @@
 local parser = require "sliceparser"
 local printt = require "printt"
 
-local filePath = "F:\\workspace\\sliceparser\\java\\"
+local filePath = "F:\\workspace\\work\\XSanGoGreen\\XSanGoGreen.Protocol\\icegenerated\\com\\XSanGoG\\eci\\Protocol\\"
 
 collectgarbage "stop"
 
@@ -63,6 +63,7 @@ import com.XSanGoG.eci.Protocol.XsgInterface;
 import com.morefun.XSanGoG.gate.common.Async;
 import com.morefun.XSanGoG.gate.common.NoSession;
 import com.morefun.XSanGoG.gate.common.Xsg;
+import com.morefun.XSanGoG.gate.backend.ResponseDispatch;
 $import
 
 @Xsg
@@ -72,11 +73,11 @@ public interface $classname extends $extends {
 ]]
 
 local syncSessionMethodTemplate = [[
-$rtn $methodName (String sessionId, $args)$exceptions;
+$rtn $methodName (String sessionId$args)$exceptions;
 ]]
 
 local asnycSessionMethodTemplate = [[
-@Async void $methodName (String sessionId, $args, ResponseDispatch response)$exceptions;
+@Async void $methodName (String sessionId, ResponseDispatch response$args)$exceptions;
 ]]
 
 local syncNoSessionMethodTemplate = [[
@@ -84,7 +85,7 @@ local syncNoSessionMethodTemplate = [[
 ]]
 
 local asnycNoSessionMethodTemplate = [[
-@NoSession @Async void $methodName ($args, ResponseDispatch response)$exceptions;
+@NoSession @Async void $methodName (ResponseDispatch response$args)$exceptions;
 ]]
 
 
@@ -205,27 +206,41 @@ local function getMethodDeclare(all, importsTbl, method)
     if exceptionsTbl and #exceptionsTbl > 0 then
         exceptionDec = "throws " .. table.concat(exceptionsTbl, ", ")
     end
-    local replTable = {
-        rtn = rtntype,
-        methodName = method.name,
-        args = table.concat(argsTbl, ", "),
-        exceptions = exceptionDec
-    }
+    
+    local argsDec = table.concat(argsTbl, ", ")
     
     local methodTemplate
     if method.nosession then
         if method.amd then
+            if #argsDec > 0 then
+                argsDec = ", " .. argsDec
+            end
             methodTemplate = asnycNoSessionMethodTemplate
         else
             methodTemplate = syncNoSessionMethodTemplate
         end
     else
         if method.amd then
+            if #argsDec > 0 then
+                argsDec = ", " .. argsDec
+            end
             methodTemplate = asnycSessionMethodTemplate
         else
+            if #argsDec > 0 then
+                argsDec = ", " .. argsDec
+            end
             methodTemplate = syncSessionMethodTemplate
         end
     end
+    
+    local replTable = {
+        rtn = rtntype,
+        methodName = method.name,
+        args = argsDec,
+        exceptions = exceptionDec
+    }
+    
+    
 
     local content = string.gsub(methodTemplate, "%$(%w+)", replTable)
 
@@ -295,7 +310,7 @@ local function genJava(functable)
     end
 end
 
-local r = parser.parse("F:/workspace/sliceparser/slices2")
+local r = parser.parse("F:\\workspace\\work\\XSanGoGreen\\XSanGoGreen.Protocol\\slice")
 
 saveEmptyInterface()
 genJava(r)
