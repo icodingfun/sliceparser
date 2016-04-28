@@ -1,7 +1,7 @@
 local parser = require "sliceparser"
 local printt = require "printt"
 
-local filePath = "F:\\workspace\\work\\XSanGoGreen\\XSanGoGreen.Protocol\\icegenerated\\com\\XSanGoG\\eci\\Protocol\\"
+local filePath = "F:\\workspace\\work\\XSanGoGreen\\XSanGoGreen.Game.Protocol\\icegenerated\\com\\XSanGoG\\eci\\Protocol\\"
 
 collectgarbage "stop"
 
@@ -186,15 +186,15 @@ local function getMethodExceptionDeclare(all, importsTbl, exceptions)
 end
 
 local function getMethodDeclare(all, importsTbl, method)
-    local rtnType = method.rtntype
-    if buildInType[rtnType] then
-        rtntype = buildInType[rtnType]
+    local rtntype = method.rtntype
+    if buildInType[rtntype] then
+        rtntype = buildInType[rtntype]
     else
         local refType = all[rtntype]
         if refType then
             local importName = refType.name;
             if refType.type == "sequence" then
-                rtnType = refType.ref .. "[]"
+                rtntype = refType.ref .. "[]"
                 importName = refType.ref
             end
             table.insert(importsTbl, import)
@@ -240,8 +240,6 @@ local function getMethodDeclare(all, importsTbl, method)
         exceptions = exceptionDec
     }
     
-    
-
     local content = string.gsub(methodTemplate, "%$(%w+)", replTable)
 
     return content
@@ -310,7 +308,7 @@ local function genJava(functable)
     end
 end
 
-local r = parser.parse("F:\\workspace\\work\\XSanGoGreen\\XSanGoGreen.Protocol\\slice")
+local r = parser.parse("F:\\workspace\\work\\XSanGoGreen\\XSanGoGreen.Game.Protocol\\slice")
 
 saveEmptyInterface()
 genJava(r)
